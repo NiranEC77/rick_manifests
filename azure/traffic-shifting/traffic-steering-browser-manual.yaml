@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vs-traffic-shifting
+spec:
+  exportTo:
+  - .
+  - istio-system
+  gateways:
+  - acme-gateway
+  hosts:
+  - acme.test.io
+  http:
+  - match:
+    - headers: 
+         User-Agent:
+           regex: ".*rome.*"
+    route:
+    - destination:
+        host: v1.shopping.rick.gns
+        port:
+          number: 3000
+  - route:
+     - destination:
+         host: v2.shopping.rick.gns
+         port:
+           number: 3000
